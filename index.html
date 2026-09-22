@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#0F172A">
+<meta name="description" content="POLAQUEST — LKPD digital Pattern Recognition & Abstraction untuk SMP Kelas 8">
+<title>POLAQUEST — Detektif Pola & Abstraksi</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0F172A; --card:#1E293B; --card2:#243449; --accent:#38BDF8;
+  --benar:#22C55E; --salah:#EF4444; --star:#FACC15;
+  --text:#F8FAFC; --dim:#CBD5E1; --line:#334155;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+  font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  font-size:18px;line-height:1.55;min-height:100vh;-webkit-tap-highlight-color:transparent}
+h1,h2,h3,h4,.font-baloo{font-family:'Baloo 2','Nunito',system-ui,sans-serif;line-height:1.2}
+body.teks-besar{font-size:22.5px}
+body.teks-besar .btn{font-size:1.1rem}
+#app{max-width:960px;margin:0 auto;padding:1rem 1rem 6rem}
+.card{background:var(--card);border-radius:1.5rem;box-shadow:0 10px 25px rgba(0,0,0,.35);padding:1.25rem}
+.card+.card{margin-top:1rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  min-height:48px;padding:.75rem 1.15rem;border-radius:1rem;font-weight:700;cursor:pointer;
+  border:none;transition:transform .12s ease,filter .12s ease,background .12s ease;
+  font-family:inherit;font-size:1rem;color:var(--text);background:var(--card2);text-decoration:none}
+.btn:hover{filter:brightness(1.1)}
+.btn:active{transform:scale(.95)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:#0B1220}
+.btn-secondary{background:#334155;color:var(--text)}
+.btn-ghost{background:transparent;color:var(--dim);border:1px solid var(--line)}
+.btn-ghost:hover{background:var(--card)}
+.btn-benar{background:var(--benar);color:#fff}
+.btn-salah{background:var(--salah);color:#fff}
+.btn-lg{min-height:56px;font-size:1.1rem;padding:1rem 1.5rem}
+.btn-block{display:flex;width:100%}
+.row{display:flex;gap:.5rem;flex-wrap:wrap}
+.stack>*+*{margin-top:.75rem}
+.muted{color:var(--dim)}
+.center{text-align:center}
+.title-huge{font-size:clamp(2.2rem,7vw,3.75rem);font-weight:800;
+  background:linear-gradient(90deg,var(--accent),var(--star));
+  -webkit-background-clip:text;background-clip:text;color:transparent;margin:0}
+.title-lg{font-size:clamp(1.6rem,5vw,2.5rem);font-weight:700;margin:.25rem 0}
+.title-md{font-size:clamp(1.25rem,4vw,1.75rem);font-weight:700;margin:.25rem 0}
+.info-bar{display:inline-block;padding:.4rem .9rem;border-radius:999px;
+  background:var(--card2);color:var(--accent);font-weight:600;font-size:.9rem;margin-bottom:.75rem}
+.float-btn{position:fixed;right:12px;z-index:40;width:48px;height:48px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;background:var(--card);
+  border:1px solid var(--line);color:var(--text);cursor:pointer;font-size:1.25rem;
+  box-shadow:0 4px 12px rgba(0,0,0,.5);transition:transform .12s ease}
+.float-btn:hover{background:var(--line)}
+.float-btn:active{transform:scale(.92)}
+.float-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#floatBtns{position:fixed;bottom:12px;right:12px;z-index:40;display:flex;flex-direction:column;gap:8px}
+#floatBtns .float-btn{position:static}
+.lang-toggle{background:var(--card);border:1px solid var(--line);border-radius:999px;
+  display:flex;overflow:hidden;height:48px}
+.lang-toggle button{border:none;background:transparent;color:var(--dim);
+  padding:0 .75rem;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem}
+.lang-toggle button.active{background:var(--accent);color:#0B1220}
+.level-grid{display:grid;grid-template-columns:1fr;gap:1rem;margin-top:1rem}
+@media(min-width:640px){.level-grid{grid-template-columns:1fr 1fr}}
+.level-card{padding:1.1rem;border-radius:1.25rem;background:var(--card);
+  border:2px solid var(--line);cursor:pointer;transition:transform .15s ease,border-color .15s ease;
+  display:flex;gap:1rem;align-items:flex-start;text-align:left;width:100%;font-family:inherit;color:var(--text)}
+.level-card:hover:not(.locked){transform:translateY(-3px);border-color:var(--accent)}
+.level-card.locked{opacity:.55;cursor:not-allowed}
+.level-card .num{font-size:2rem;line-height:1;font-family:'Baloo 2',sans-serif;font-weight:800;color:var(--accent);min-width:2.5rem}
+.level-card .stars{font-size:1.1rem;margin-top:.25rem}
+.option{display:flex;gap:.75rem;align-items:flex-start;padding:1rem;border-radius:1rem;
+  background:var(--card2);border:2px solid transparent;cursor:pointer;transition:all .15s ease;
+  text-align:left;width:100%;color:var(--text);font-family:inherit;font-size:1rem;line-height:1.5}
+.option:hover:not(:disabled){background:#2E4260}
+.option.selected{border-color:var(--accent)}
+.option.benar{border-color:var(--benar);background:rgba(34,197,94,.15)}
+.option.salah{border-color:var(--salah);background:rgba(239,68,68,.15)}
+.option:disabled{cursor:default}
+.option .letter{font-weight:800;color:var(--accent);min-width:1.5rem;font-family:'Baloo 2',sans-serif}
+.option .lbl{flex:1}
+table{width:100%;border-collapse:collapse;font-size:.95rem;overflow:hidden;border-radius:.75rem}
+th,td{padding:.65rem .6rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--card2);font-weight:700;color:var(--accent);font-family:'Baloo 2',sans-serif;font-size:.95rem}
+tr:last-child td{border-bottom:none}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:.75rem;border:1px solid var(--line)}
+.basket{min-height:110px;border:2px dashed var(--line);border-radius:1rem;padding:.75rem;
+  background:rgba(36,52,73,.35);transition:border-color .15s ease,background .15s ease}
+.basket.drop-active{border-color:var(--accent);background:rgba(56,189,248,.08)}
+.basket-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;font-weight:700;font-family:'Baloo 2',sans-serif}
+.chip{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem .85rem;border-radius:.75rem;
+  background:#334155;cursor:pointer;user-select:none;font-weight:600;margin:.25rem;font-size:.95rem;
+  border:2px solid transparent;color:var(--text);font-family:inherit;text-align:left;line-height:1.35}
+.chip:hover{background:#475569}
+.chip.picked{border-color:var(--accent)}
+.chip.benar-tag{background:rgba(34,197,94,.25);border-color:var(--benar);cursor:default}
+.chip.salah-tag{background:rgba(239,68,68,.25);border-color:var(--salah);cursor:default}
+.chip[disabled]{opacity:1}
+.pool{min-height:80px;padding:.35rem;border:2px dashed var(--line);border-radius:1rem;background:rgba(15,23,42,.4)}
+.stars-bar{font-size:1.6rem;letter-spacing:2px;line-height:1}
+.progress-track{background:var(--line);border-radius:999px;height:12px;overflow:hidden}
+.progress-fill{background:linear-gradient(90deg,var(--accent),var(--star));height:100%;transition:width .4s ease}
+.fb{border-radius:1rem;padding:1rem;margin-top:.75rem;font-weight:600;display:flex;gap:.75rem;align-items:flex-start}
+.fb.ok{background:rgba(34,197,94,.15);border:1px solid var(--benar);color:#BBF7D0}
+.fb.no{background:rgba(239,68,68,.15);border:1px solid var(--salah);color:#FECACA}
+.fb.info{background:rgba(56,189,248,.1);border:1px solid var(--accent);color:#BAE6FD}
+.fade-in{animation:fadeIn .3s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.pop{animation:pop .5s ease-out}
+@keyframes pop{0%{transform:scale(.6);opacity:.4}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.shake{animation:shake .4s ease-in-out}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:60;display:flex;
+  align-items:center;justify-content:center;padding:1rem;animation:fadeIn .2s ease}
+.modal{background:var(--card);border-radius:1.5rem;max-width:640px;width:100%;max-height:85vh;
+  overflow-y:auto;padding:1.5rem;box-shadow:0 20px 40px rgba(0,0,0,.6)}
+.modal h3{margin:0 0 .75rem;font-size:1.4rem}
+.gloss-item{display:flex;gap:.75rem;padding:.6rem;border-bottom:1px solid var(--line);
+  align-items:flex-start;flex-wrap:wrap}
+.gloss-item .en{color:var(--accent);font-weight:700;font-family:'Baloo 2',sans-serif;min-width:150px}
+.gloss-item .id{color:var(--text);flex:1;min-width:140px}
+.search-input{width:100%;min-height:48px;padding:.75rem 1rem;border-radius:.75rem;
+  background:var(--card2);border:1px solid var(--line);color:var(--text);font-family:inherit;font-size:1rem}
+.search-input:focus{outline:2px solid var(--accent);outline-offset:2px}
+textarea{width:100%;min-height:110px;padding:.85rem 1rem;border-radius:1rem;background:var(--card2);
+  border:1px solid var(--line);color:var(--text);font-family:inherit;font-size:1rem;line-height:1.55;resize:vertical}
+textarea:focus{outline:2px solid var(--accent);outline-offset:2px}
+.timer-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .8rem;
+  border-radius:999px;background:var(--card2);color:var(--star);font-weight:700;font-size:.9rem}
+.timer-badge.warn{color:#FCA5A5;background:rgba(239,68,68,.15)}
+.tooltip{position:relative;display:inline-block;border-bottom:1px dotted var(--accent);cursor:help}
+.tooltip:hover::after,.tooltip:focus::after{content:attr(data-tip);position:absolute;left:0;bottom:120%;
+  background:#0B1220;color:var(--text);padding:.5rem .75rem;border-radius:.5rem;font-size:.85rem;
+  white-space:nowrap;z-index:20;border:1px solid var(--accent)}
+.kbd{display:inline-block;padding:.1rem .45rem;background:var(--card2);border:1px solid var(--line);
+  border-bottom-width:2px;border-radius:.35rem;font-family:ui-monospace,monospace;font-size:.85rem}
+footer.app-footer{text-align:center;padding:1rem;color:var(--dim);font-size:.8rem;margin-top:2rem}
+@media print{
+  body{background:#fff;color:#000}
+  #floatBtns,.no-print,.btn{display:none!important}
+  .card{box-shadow:none;border:1px solid #ccc;background:#fff;color:#000}
+  .muted{color:#333}
+  th{background:#eee;color:#000}
+}
+</style>
+</head>
+<body>
+<div id="app" role="main"></div>
+<div id="floatBtns" aria-label="Tombol alat bantu"></div>
+<div id="modalRoot"></div>
+
+<script>
+/* =====================================================================
+   ====== PENGATURAN CEPAT ======
+   Guru cukup mengubah teks di antara tanda kutip.
+   Jangan hapus tanda koma (,) dan tanda kutip (").
+   ===================================================================== */
+const CONFIG = {
+  // ==== IDENTITAS (ubah sesuai sekolahmu) ====
+  namaSekolah: "SMP Nusantara",
+  namaGuru: "Guru Informatika",
+  kelas: "Kelas 8 — Fase D",
+  mataPelajaran: "Informatika",
+  judulAplikasi: "POLAQUEST",
+  subjudulAplikasi: "Detektif Pola & Abstraksi",
+
+  // ==== TAMPILAN ====
+  modeBahasaDefault: "DUAL",   // pilihan: "ID", "EN", "DUAL"
+  suaraAktifDefault: true,     // true = bunyi aktif, false = senyap
+  modeTeksBesar: false,        // true = semua huruf diperbesar 125%
+  warnaAksen: "#38BDF8",       // warna utama tampilan
+
+  // ==== ATURAN MAIN ====
+  timerAktif: false,           // true = ada hitungan waktu per level
+  durasiTimerDetik: 180,       // durasi timer jika timerAktif = true
+  maksPercobaan: 2,            // berapa kali boleh mencoba per soal
+  poinPercobaanKedua: 0.5,     // nilai soal bila benar di percobaan ke-2
+
+  // ==== AMBANG BINTANG ====
+  ambangBintang1: 50,
+  ambangBintang2: 75,
+  ambangBintang3: 85,
+
+  // ==== DATA & PRIVASI ====
+  simpanProgres: true,
+  tampilkanGlosarium: true,
+  tampilkanTombolCetak: true
+};
+
+/* ===================== GLOSARIUM BILINGUAL ===================== */
+const GLOSARIUM = [
+  ["Pattern Recognition", "Pengenalan Pola"],
+  ["Abstraction", "Abstraksi"],
+  ["Computational Thinking", "Berpikir Komputasional"],
+  ["Decomposition", "Dekomposisi"],
+  ["Problem Based Learning", "Pembelajaran Berbasis Masalah"],
+  ["Deep Learning", "Pembelajaran Mendalam"],
+  ["Universal Design for Learning", "Desain Universal untuk Pembelajaran"],
+  ["Common Pattern", "Pola Umum / Pola yang Sering Muncul"],
+  ["Data", "Data"],
+  ["Schedule", "Jadwal"],
+  ["Route", "Rute"],
+  ["Stop / Stopover", "Titik Berhenti"],
+  ["Travel Time", "Waktu Tempuh"],
+  ["Passenger", "Penumpang"],
+  ["Transaction", "Transaksi"],
+  ["Canteen", "Kantin"],
+  ["Snack", "Jajanan"],
+  ["Important Information", "Informasi Penting"],
+  ["Irrelevant Detail", "Detail yang Tidak Relevan"],
+  ["Goal / Purpose", "Tujuan"],
+  ["Similarity", "Kesamaan"],
+  ["Regularity", "Keteraturan"],
+  ["Repeated", "Berulang"],
+  ["To Recognize", "Mengenali"],
+  ["Problem", "Masalah"],
+  ["Solution", "Solusi"],
+  ["Prediction", "Prediksi / Perkiraan"],
+  ["Decision", "Keputusan"]
+];
+
+/* ===================== DATA LEVEL ===================== */
+/* Sintaks bilingual: {{English|Bahasa Indonesia}} akan dirender sesuai mode */
+const LEVELS = [
+{
+  id:1, nama:"Jadwal Misterius", jenis:"Pattern Recognition", ikon:"📅",
+  narasi:"Kak Rani lupa membawa buku. Padahal besok jadwalnya sama persis dengan hari Kamis. Hari apa saja yang polanya identik?",
+  tabel:{
+    headers:["Hari","Jam ke-1","Jam ke-2","Jam ke-3"],
+    rows:[
+      ["Senin","Matematika","Matematika","IPAS"],
+      ["Selasa","Bahasa Indonesia","IPA","IPA"],
+      ["Rabu","Matematika","Matematika","Bahasa Inggris"],
+      ["Kamis","Bahasa Indonesia","IPA","IPA"]
+    ]
+  },
+  soal:[
+    {
+      tipe:"multi", butuh:2,
+      pertanyaan:"Pilih 2 hari yang memiliki pola jadwal IDENTIK. Ketuk kartu harinya.",
+      opsi:[
+        {id:"senin", label:"Senin"},
+        {id:"selasa", label:"Selasa"},
+        {id:"rabu", label:"Rabu"},
+        {id:"kamis", label:"Kamis"}
+      ],
+      jawaban:["selasa","kamis"],
+      fbBenar:"Tepat! Selasa dan Kamis sama-sama berpola Bahasa Indonesia → IPA → IPA. Inilah {{Pattern Recognition|Pengenalan Pola}}: kamu mengenali keteraturan yang berulang.",
+      fbSalah:"Belum tepat. Bandingkan urutan mata pelajaran tiap hari dari jam ke-1 sampai jam ke-3. Cari dua hari yang urutannya sama persis."
+    },
+    {
+      tipe:"pg",
+      pertanyaan:"Apa pola berulang yang sama antara hari Senin dan hari Rabu?",
+      opsi:[
+        {text:"Mata pelajaran Matematika muncul dua kali berturut-turut di jam ke-1 dan ke-2", benar:true},
+        {text:"Mata pelajaran IPA muncul dua kali berturut-turut", benar:false},
+        {text:"Bahasa Inggris selalu di jam ke-1", benar:false},
+        {text:"IPAS selalu di jam ke-3", benar:false}
+      ],
+      fbBenar:"Benar! Senin dan Rabu sama-sama punya pola 'Matematika → Matematika' di dua jam pertama. Pola ini disebut {{Common Pattern|Pola Umum}}.",
+      fbSalah:"Belum tepat. Perhatikan dua jam pertama Senin (Matematika, Matematika) lalu bandingkan dengan dua jam pertama Rabu."
+    },
+    {
+      tipe:"pg",
+      pertanyaan:"Kalau tujuanmu adalah 'buku apa yang harus dibawa hari ini?', informasi mana yang PENTING?",
+      opsi:[
+        {text:"Nama mata pelajaran di setiap jam", benar:true},
+        {text:"Nama guru yang mengajar", benar:false},
+        {text:"Nomor ruang kelas", benar:false},
+        {text:"Jam istirahat", benar:false}
+      ],
+      fbBenar:"Tepat! Untuk tahu buku yang dibawa, kamu hanya butuh nama mata pelajaran. Nama guru, ruang kelas, dan jam istirahat adalah detail yang bisa diabaikan. Itulah {{Abstraction|Abstraksi}}!",
+      fbSalah:"Coba pikirkan: informasi mana yang benar-benar membantumu memilih buku untuk dibawa?"
+    }
+  ]
+},
+{
+  id:2, nama:"Rute ke Sekolah", jenis:"Pattern Recognition", ikon:"🚌",
+  narasi:"Empat angkutan sekolah punya jalur berbeda. Tapi ada satu titik yang selalu mereka lewati. Titik apa itu?",
+  tabel:{
+    headers:["Rute","Titik Berhenti","Waktu Tempuh"],
+    rows:[
+      ["Rute A","Rumah → Pasar → Sekolah","15 menit"],
+      ["Rute B","Rumah → Masjid → Pasar → Sekolah","20 menit"],
+      ["Rute C","Rumah → Taman → Pasar → Sekolah","18 menit"],
+      ["Rute D","Rumah → Pasar → Taman → Sekolah","22 menit"]
+    ]
+  },
+  soal:[
+    {
+      tipe:"pg",
+      pertanyaan:"Titik berhenti mana yang selalu dilewati TEPAT SEBELUM sampai di Sekolah pada SEMUA rute?",
+      opsi:[
+        {text:"Pasar", benar:true},
+        {text:"Masjid", benar:false},
+        {text:"Taman", benar:false},
+        {text:"Rumah", benar:false}
+      ],
+      fbBenar:"Tepat! Pasar adalah {{Common Pattern|Pola Umum}} dari keempat rute. Karena itu, Pasar bisa dijadikan patokan utama saat mencari rute tercepat.",
+      fbSalah:"Coba baca lagi setiap rute dari kiri ke kanan, lalu perhatikan titik yang letaknya persis sebelum 'Sekolah'."
+    },
+    {
+      tipe:"pg",
+      pertanyaan:"Ada berapa rute yang melewati Pasar?",
+      opsi:[
+        {text:"1 rute", benar:false},
+        {text:"2 rute", benar:false},
+        {text:"3 rute", benar:false},
+        {text:"4 rute", benar:true}
+      ],
+      fbBenar:"Benar, keempat rute melewati Pasar. Pola yang muncul di SEMUA data disebut pola yang paling kuat.",
+      fbSalah:"Hitung lagi satu per satu: Rute A? Rute B? Rute C? Rute D? Berapa yang mengandung kata 'Pasar'?"
+    },
+    {
+      tipe:"pg",
+      pertanyaan:"Jika tujuanmu adalah 'memilih rute yang paling cepat', kolom mana yang PENTING?",
+      opsi:[
+        {text:"Kolom Waktu Tempuh", benar:true},
+        {text:"Kolom Titik Berhenti", benar:false},
+        {text:"Nama murid yang ikut", benar:false},
+        {text:"Warna angkutannya", benar:false}
+      ],
+      fbBenar:"Tepat! Untuk mengukur kecepatan, kamu hanya butuh kolom {{Travel Time|Waktu Tempuh}}. Nama-nama titik berhenti di tengah jalan tidak relevan untuk tujuan ini.",
+      fbSalah:"Kalau bicara 'cepat', ukuran apa yang dipakai? Kolom apa yang menyimpan ukuran itu?"
+    }
+  ]
+},
+{
+  id:3, nama:"Rahasia Kantin", jenis:"Pattern Recognition", ikon:"🍜",
+  narasi:"Bu Kantin bingung mau menyiapkan stok besok. Bantu dia membaca pola pembelian murid!",
+  tabel:{
+    headers:["Nama Murid","Jajanan yang Dibeli","Waktu Beli"],
+    rows:[
+      ["Andi","Bakso, Es Teh","09.30"],
+      ["Budi","Bakso, Es Teh","09.32"],
+      ["Citra","Somay, Jus","09.45"],
+      ["Dinda","Bakso, Es Teh","09.35"]
+    ]
+  },
+  soal:[
+    {
+      tipe:"pg",
+      pertanyaan:"Kombinasi jajanan apa yang muncul berulang kali?",
+      opsi:[
+        {text:"Bakso + Es Teh", benar:true},
+        {text:"Somay + Jus", benar:false},
+        {text:"Bakso + Jus", benar:false},
+        {text:"Somay + Es Teh", benar:false}
+      ],
+      fbBenar:"Tepat! Kombinasi 'Bakso + Es Teh' muncul 3 kali. Itulah polanya.",
+      fbSalah:"Hitung berapa kali setiap kombinasi muncul. Kombinasi mana yang paling sering?"
+    },
+    {
+      tipe:"pg",
+      pertanyaan:"Pada rentang waktu berapa pola 'Bakso + Es Teh' muncul?",
+      opsi:[
+        {text:"Sekitar pukul 09.30 – 09.35", benar:true},
+        {text:"Sekitar pukul 09.45 – 09.50", benar:false},
+        {text:"Sekitar pukul 08.00 – 08.30", benar:false},
+        {text:"Sepanjang hari tanpa pola waktu", benar:false}
+      ],
+      fbBenar:"Benar! Pola ini muncul di jam istirahat pertama, sekitar pukul 09.30–09.35.",
+      fbSalah:"Lihat kolom 'Waktu Beli' pada baris yang membeli Bakso + Es Teh. Rentang waktunya berapa?"
+    },
+    {
+      tipe:"pg",
+      pertanyaan:"Kalau kamu penjaga kantin, apa yang sebaiknya kamu siapkan LEBIH BANYAK besok?",
+      opsi:[
+        {text:"Bakso dan Es Teh", benar:true},
+        {text:"Somay dan Jus", benar:false},
+        {text:"Semua menu sama banyak", benar:false},
+        {text:"Tidak perlu menyiapkan apa pun", benar:false}
+      ],
+      fbBenar:"Tepat! Inilah gunanya {{Pattern Recognition|Pengenalan Pola}}: kita bisa MEMPREDIKSI kebutuhan besok berdasarkan pola hari ini.",
+      fbSalah:"Menu yang paling sering dibeli itulah yang harus paling banyak disiapkan."
+    }
+  ]
+},
+{
+  id:4, nama:"Saring atau Simpan", jenis:"Abstraction", ikon:"🎯",
+  narasi:"Susun informasi ke keranjang yang tepat! Tujuan tiap skenario menunjukkan apa yang dianggap PENTING.",
+  skenario:[
+    {
+      tujuan:"Buku apa yang harus dibawa hari ini?",
+      kartu:[
+        {text:"Nama mata pelajaran per jam", penting:true},
+        {text:"Nama guru pengampu", penting:false},
+        {text:"Ruang kelas", penting:false},
+        {text:"Jam istirahat", penting:false}
+      ],
+      penjelasan:"Kalau tujuannya tahu buku yang dibawa, kamu cukup melihat daftar mata pelajaran. Nama guru, ruang kelas, dan jam istirahat tidak membantumu memilih buku."
+    },
+    {
+      tujuan:"Rute mana yang paling cepat?",
+      kartu:[
+        {text:"Kolom Waktu Tempuh", penting:true},
+        {text:"Kolom Titik Berhenti", penting:false},
+        {text:"Nama murid penumpang", penting:false},
+        {text:"Jumlah penumpang", penting:false}
+      ],
+      penjelasan:"Untuk mengukur kecepatan, hanya Waktu Tempuh yang relevan. Titik berhenti, nama murid, dan jumlah penumpang tidak memengaruhi cepat atau lambatnya rute."
+    },
+    {
+      tujuan:"Rute mana yang melewati Pasar?",
+      kartu:[
+        {text:"Kolom Titik Berhenti", penting:true},
+        {text:"Kolom Waktu Tempuh", penting:false},
+        {text:"Kolom Jumlah Penumpang", penting:false},
+        {text:"Nama murid penumpang", penting:false}
+      ],
+      penjelasan:"Perhatikan! Tujuan berubah, maka informasi penting pun berubah. Kolom Waktu Tempuh yang tadinya PENTING, sekarang jadi tidak relevan. Kolom Titik Berhenti yang tadinya diabaikan, sekarang justru yang paling penting. Inilah inti {{Abstraction|Abstraksi}}: informasi penting tergantung pada tujuan."
+    },
+    {
+      tujuan:"Jajanan apa yang paling laku?",
+      kartu:[
+        {text:"Kolom Jajanan yang Dibeli", penting:true},
+        {text:"Nama murid yang membeli", penting:false},
+        {text:"Waktu beli", penting:false},
+        {text:"Kolom nama kelas murid", penting:false}
+      ],
+      penjelasan:"Untuk tahu jajanan terlaris, kamu cukup menghitung kolom Jajanan yang Dibeli. Siapa yang membeli tidak penting untuk pertanyaan ini."
+    },
+    {
+      tujuan:"Kapan kantin harus menambah stok bakso?",
+      kartu:[
+        {text:"Kolom Waktu Beli", penting:true},
+        {text:"Kolom Jajanan yang Dibeli", penting:true},
+        {text:"Nama murid yang membeli", penting:false},
+        {text:"Nama kelas murid", penting:false}
+      ],
+      penjelasan:"Sekarang 'Waktu Beli' yang tadinya tidak penting, jadi PENTING! Karena tujuannya berubah menjadi soal waktu. Inilah pelajaran terpenting hari ini: tidak ada informasi yang 'penting selamanya' — semuanya bergantung pada tujuanmu."
+    }
+  ]
+},
+{
+  id:5, nama:"BOSS: Antar-Jemput Sekolah", jenis:"PBL Gabungan", ikon:"🏆",
+  narasi:"Sekolahmu sedang merancang sistem antar-jemput sekolah baru. Berikut data rute, jumlah penumpang, dan waktu tempuh selama satu minggu. Bantu kepala sekolah mengambil keputusan!",
+  tabel:{
+    headers:["Rute","Titik Berhenti","Waktu Tempuh","Jumlah Penumpang"],
+    rows:[
+      ["Rute A","Rumah → Pasar → Sekolah","15 menit","12 murid"],
+      ["Rute B","Rumah → Masjid → Pasar → Sekolah","20 menit","8 murid"],
+      ["Rute C","Rumah → Taman → Pasar → Sekolah","18 menit","10 murid"],
+      ["Rute D","Rumah → Pasar → Taman → Sekolah","22 menit","5 murid"]
+    ]
+  },
+  soal:[
+    {
+      tipe:"pg",
+      pertanyaan:"Titik berhenti mana yang menjadi pola berulang (common pattern) di KEEMPAT rute?",
+      opsi:[
+        {text:"Pasar", benar:true},
+        {text:"Masjid", benar:false},
+        {text:"Taman", benar:false},
+        {text:"Rumah", benar:false}
+      ],
+      fbBenar:"Tepat! Pasar muncul di semua rute. Pola inilah yang membuat Pasar jadi titik strategis.",
+      fbSalah:"Cek tiap rute, cari titik berhenti yang muncul di keempat baris."
+    },
+    {
+      tipe:"pg",
+      pertanyaan:"Jika tujuan sekolah adalah memilih rute yang PALING BANYAK DIMINATI murid, informasi mana yang penting?",
+      opsi:[
+        {text:"Kolom Jumlah Penumpang", benar:true},
+        {text:"Kolom Waktu Tempuh", benar:false},
+        {text:"Kolom Titik Berhenti", benar:false},
+        {text:"Nama-nama murid penumpang", benar:false}
+      ],
+      fbBenar:"Benar! 'Paling diminati' berarti bicara soal jumlah orang. Jadi kolom Jumlah Penumpang adalah informasi pentingnya.",
+      fbSalah:"Kalau bicara 'banyak diminati', kolom mana yang menunjukkan jumlah orang?"
+    },
+    {
+      tipe:"pg",
+      pertanyaan:"Berdasarkan jawaban soal sebelumnya, rute mana yang paling banyak diminati?",
+      opsi:[
+        {text:"Rute A — 12 murid", benar:true},
+        {text:"Rute B — 8 murid", benar:false},
+        {text:"Rute C — 10 murid", benar:false},
+        {text:"Rute D — 5 murid", benar:false}
+      ],
+      fbBenar:"Tepat! Rute A punya 12 murid, paling banyak di antara semua.",
+      fbSalah:"Lihat kolom Jumlah Penumpang. Angka terbesar ada di rute mana?"
+    },
+    {
+      tipe:"pg",
+      pertanyaan:"Sekarang tujuan sekolah BERUBAH menjadi 'mencari rute tercepat'. Apakah informasi pentingnya masih sama?",
+      opsi:[
+        {text:"Tidak sama. Sekarang informasi pentingnya adalah kolom Waktu Tempuh", benar:true},
+        {text:"Sama saja, tetap kolom Jumlah Penumpang", benar:false},
+        {text:"Sama saja, tetap kolom Titik Berhenti", benar:false},
+        {text:"Tidak ada informasi yang penting", benar:false}
+      ],
+      fbBenar:"Tepat sekali! Tujuan berubah → informasi penting ikut berubah. Inilah bukti bahwa {{Abstraction|Abstraksi}} sangat bergantung pada tujuan.",
+      fbSalah:"Ingat kunci abstraksi: informasi penting itu tergantung tujuan. Kalau tujuan berubah, informasi pentingnya juga berubah."
+    },
+    {
+      tipe:"pg",
+      pertanyaan:"Berdasarkan tujuan 'rute tercepat', rute mana yang dipilih?",
+      opsi:[
+        {text:"Rute A — 15 menit", benar:true},
+        {text:"Rute B — 20 menit", benar:false},
+        {text:"Rute C — 18 menit", benar:false},
+        {text:"Rute D — 22 menit", benar:false}
+      ],
+      fbBenar:"Benar! Rute A paling cepat, hanya 15 menit.",
+      fbSalah:"Lihat kolom Waktu Tempuh. Angka terkecil ada di rute mana?"
+    },
+    {
+      tipe:"pg",
+      pertanyaan:"Apa kesimpulan akhir untuk kepala sekolah?",
+      opsi:[
+        {text:"Pilih Rute A, karena paling cepat (15 menit) sekaligus paling banyak diminati (12 murid)", benar:true},
+        {text:"Pilih Rute D, karena paling lama dan paling sedikit peminatnya", benar:false},
+        {text:"Pilih Rute B, karena melewati Masjid", benar:false},
+        {text:"Semua rute sama saja, tidak perlu dipilih", benar:false}
+      ],
+      fbBenar:"Sempurna, Detektif! Rute A menang di dua kriteria sekaligus. Kombinasi {{Pattern Recognition|Pengenalan Pola}} dan {{Abstraction|Abstraksi}} membuat masalah yang tadinya rumit jadi jauh lebih sederhana dan cepat diselesaikan.",
+      fbSalah:"Gabungkan dua analisis: rute tercepat dan rute paling banyak diminati. Apakah ada rute yang menang di keduanya?"
+    }
+  ]
+}
+];
+
+/* ===================== REFLEKSI ===================== */
+const REFLEKSI = [
+  "Pola apa yang paling mudah kamu temukan hari ini? Mengapa?",
+  "Pernahkah kamu tanpa sadar sudah melakukan abstraksi (menyaring informasi penting) dalam kehidupan sehari-hari? Ceritakan satu contoh.",
+  "Bagaimana perasaanmu ketika berhasil menemukan pola dari data yang terlihat rumit di awal?"
+];
+const REFLEKSI_PENUTUP = "Pattern Recognition dan Abstraction adalah dua keterampilan yang akan terus kamu pakai — bukan hanya di pelajaran Informatika, tapi juga saat belajar Matematika, membaca cerita, bahkan saat bermain game. Semakin sering berlatih mengenali pola dan memilah informasi penting, semakin cepat pula kamu menyelesaikan masalah di kehidupan nyata.";
+
+/* ===================== STATE ===================== */
+const STATE = {
+  screen:"home",
+  currentLevel:0,
+  currentSoal:0,
+  currentSkenario:0,
+  levelSelesai:[],
+  bintang:{},
+  jawabanRefleksi:{q0:"",q1:"",q2:""},
+  modeBahasa:CONFIG.modeBahasaDefault,
+  suaraAktif:CONFIG.suaraAktifDefault,
+  teksBesar:CONFIG.modeTeksBesar,
+  // transient per level
+  selectedMulti:[],
+  selectedPG:null,
+  percobaan:0,
+  showFeedback:false,
+  fbText:"",
+  fbOk:false,
+  soalskor:[],
+  // level 4 sort
+  sortAssign:{},
+  sortChecked:false,
+  sortFeedback:{},
+  // timer
+  timerID:null,
+  timerSisa:0
+};
+
+/* ===================== UTILITAS ===================== */
+function bi(en, id){
+  if (STATE.modeBahasa === "ID") return id;
+  if (STATE.modeBahasa === "EN") return en + " (" + id + ")";
+  return en + " / " + id;
+}
+function renderBi(text){
+  if (!text) return "";
+  return text.replace(/\{\{([^|]+)\|([^}]+)\}\}/g, (m,en,id)=> bi(en,id));
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+let audioCtx = null;
+function playSound(type){
+  if (!STATE.suaraAktif) return;
+  try{
+    if (!audioCtx){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      audioCtx = new AC();
+    }
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    const now = audioCtx.currentTime;
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.connect(g); g.connect(audioCtx.destination);
+    if (type === "benar"){
+      o.type = "sine"; o.frequency.setValueAtTime(660, now);
+      o.frequency.exponentialRampToValueAtTime(990, now+0.12);
+      g.gain.setValueAtTime(0.15, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now+0.35);
+      o.start(now); o.stop(now+0.36);
+    } else if (type === "salah"){
+      o.type = "square"; o.frequency.setValueAtTime(180, now);
+      o.frequency.exponentialRampToValueAtTime(120, now+0.18);
+      g.gain.setValueAtTime(0.12, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now+0.32);
+      o.start(now); o.stop(now+0.34);
+    } else if (type === "bintang"){
+      o.type = "triangle"; o.frequency.setValueAtTime(880, now);
+      o.frequency.exponentialRampToValueAtTime(1320, now+0.15);
+      g.gain.setValueAtTime(0.14, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now+0.4);
+      o.start(now); o.stop(now+0.42);
+    } else {
+      o.type = "sine"; o.frequency.setValueAtTime(440, now);
+      g.gain.setValueAtTime(0.08, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now+0.15);
+      o.start(now); o.stop(now+0.16);
+    }
+  }catch(e){ /* abaikan error suara */ }
+}
+
+/* ===================== PENYIMPANAN ===================== */
+const STORAGE_KEY = "polaquest_progress";
+function saveProgress(){
+  if (!CONFIG.simpanProgres) return;
+  try{
+    const data = {
+      levelSelesai: STATE.levelSelesai,
+      bintang: STATE.bintang,
+      jawabanRefleksi: STATE.jawabanRefleksi,
+      modeBahasa: STATE.modeBahasa,
+      suaraAktif: STATE.suaraAktif,
+      teksBesar: STATE.teksBesar,
+      timestamp: new Date().toISOString()
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }catch(e){}
+}
+function loadProgress(){
+  if (!CONFIG.simpanProgres) return;
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (Array.isArray(d.levelSelesai)) STATE.levelSelesai = d.levelSelesai;
+    if (d.bintang && typeof d.bintang === "object") STATE.bintang = d.bintang;
+    if (d.jawabanRefleksi) STATE.jawabanRefleksi = Object.assign({q0:"",q1:"",q2:""}, d.jawabanRefleksi);
+    if (d.modeBahasa && ["ID","EN","DUAL"].includes(d.modeBahasa)) STATE.modeBahasa = d.modeBahasa;
+    if (typeof d.suaraAktif === "boolean") STATE.suaraAktif = d.suaraAktif;
+    if (typeof d.teksBesar === "boolean") STATE.teksBesar = d.teksBesar;
+  }catch(e){}
+}
+function resetProgress(){
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  STATE.levelSelesai = [];
+  STATE.bintang = {};
+  STATE.jawabanRefleksi = {q0:"",q1:"",q2:""};
+  STATE.currentLevel = 0;
+  STATE.currentSoal = 0;
+  STATE.currentSkenario = 0;
+  STATE.sortAssign = {};
+  STATE.sortChecked = false;
+  STATE.sortFeedback = {};
+  STATE.screen = "home";
+  render();
+}
+function totalBintang(){
+  let t = 0;
+  for (const k in STATE.bintang) t += (STATE.bintang[k] || 0);
+  return t;
+}
+function hitungBintang(skor){
+  if (skor >= CONFIG.ambangBintang3) return 3;
+  if (skor >= CONFIG.ambangBintang2) return 2;
+  if (skor >= CONFIG.ambangBintang1) return 1;
+  return 0;
+}
+function bintangStr(n){
+  return "⭐".repeat(Math.max(0,Math.min(3,n))) + "☆".repeat(Math.max(0,3-n));
+}
+function getBadge(total){
+  if (total >= 15) return {ikon:"🏆", nama:"Detektif Pola Legendaris", pesan:"Sempurna! Kamu menguasai Pattern Recognition dan Abstraction."};
+  if (total >= 10) return {ikon:"🥇", nama:"Detektif Senior", pesan:"Hebat! Naluri polamu sudah tajam."};
+  if (total >= 5)  return {ikon:"🥈", nama:"Detektif Mahir", pesan:"Kamu sudah bisa menemukan pola dan menyaring informasi!"};
+  return {ikon:"🥉", nama:"Detektif Pemula", pesan:"Kamu baru mulai! Coba lagi, kamu pasti bisa."};
+}
+
+/* ===================== MODAL ===================== */
+function showModal(html){
+  const root = document.getElementById("modalRoot");
+  root.innerHTML = `<div class="modal-bg" data-action="close-modal-bg"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;
+  // Fokus ke tombol tutup jika ada
+  const btn = root.querySelector("[data-autofocus]");
+  if (btn) btn.focus();
+}
+function closeModal(){
+  document.getElementById("modalRoot").innerHTML = "";
+}
+function openGlosarium(){
+  let items = GLOSARIUM.map(([en,id]) =>
+    `<div class="gloss-item"><span class="en">${escapeHtml(en)}</span><span class="id">${escapeHtml(id)}</span></div>`
+  ).join("");
+  showModal(`
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <h3>📖 Glosarium / Glossary</h3>
+      <button class="btn btn-ghost" data-action="close-modal" data-autofocus>✕</button>
+    </div>
+    <input id="glossSearch" class="search-input" type="search" placeholder="🔍 Cari istilah..." aria-label="Cari istilah">
+    <div id="glossList" style="margin-top:.75rem">${items}</div>
+    <div class="center" style="margin-top:1rem">
+      <button class="btn btn-secondary" data-action="close-modal">Tutup</button>
+    </div>
+  `);
+  const inp = document.getElementById("glossSearch");
+  if (inp){
+    inp.addEventListener("input", ()=>{
+      const q = inp.value.toLowerCase().trim();
+      document.getElementById("glossList").innerHTML = GLOSARIUM
+        .filter(([en,id]) => !q || en.toLowerCase().includes(q) || id.toLowerCase().includes(q))
+        .map(([en,id]) => `<div class="gloss-item"><span class="en">${escapeHtml(en)}</span><span class="id">${escapeHtml(id)}</span></div>`)
+        .join("") || `<p class="muted center">Tidak ada istilah yang cocok.</p>`;
+    });
+    setTimeout(()=>inp.focus(), 100);
+  }
+}
+function openHelp(){
+  showModal(`
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <h3>❓ Petunjuk Bermain</h3>
+      <button class="btn btn-ghost" data-action="close-modal" data-autofocus>✕</button>
+    </div>
+    <div class="stack">
+      <p><b>1. Mulai dari Peta Level.</b> Level terbuka berurutan. Level 1 selalu bisa dimainkan.</p>
+      <p><b>2. Jawab setiap soal.</b> Ada soal pilihan ganda, pilih 2 kartu, dan susun kartu ke keranjang.</p>
+      <p><b>3. Setiap soal boleh dicoba 2 kali.</b> Kalau masih salah, jawaban benar dan alasannya akan ditampilkan.</p>
+      <p><b>4. Kumpulkan bintang.</b> Maksimal 15 ⭐ dari 5 level. Level 6 adalah refleksi tanpa nilai.</p>
+      <p><b>5. Ganti bahasa kapan saja.</b> Tombol 🌐 di kanan bawah.</p>
+      <p><b>6. Buka glosarium.</b> Tombol 📖 di kanan bawah untuk melihat arti istilah Inggris.</p>
+      <p><b>7. Progres otomatis tersimpan.</b> Boleh ditutup dan dilanjutkan nanti.</p>
+    </div>
+    <div class="center" style="margin-top:1rem">
+      <button class="btn btn-primary" data-action="close-modal">Mengerti!</button>
+    </div>
+  `);
+}
+function confirmReset(){
+  showModal(`
+    <h3>⚠️ Reset Progres</h3>
+    <p>Yakin ingin menghapus semua bintang dan catatanmu? Tindakan ini tidak bisa dibatalkan.</p>
+    <div class="row" style="justify-content:flex-end;margin-top:1rem">
+      <button class="btn btn-ghost" data-action="close-modal">Batal</button>
+      <button class="btn btn-salah" data-action="do-reset" data-autofocus>Ya, hapus semua</button>
+    </div>
+  `);
+}
+function openPrint(){
+  showModal(`
+    <h3>🖨️ Cetak Catatan</h3>
+    <p>Klik tombol di bawah untuk mencetak halaman ini. Kamu juga bisa menyimpannya sebagai PDF dari dialog cetak.</p>
+    <div class="row" style="justify-content:flex-end;margin-top:1rem">
+      <button class="btn btn-ghost" data-action="close-modal">Batal</button>
+      <button class="btn btn-primary" data-action="do-print" data-autofocus>Cetak Sekarang</button>
+    </div>
+  `);
+}
+
+/* ===================== VIEW: HOME ===================== */
+function viewHome(){
+  const t = totalBintang();
+  const hasProgress = STATE.levelSelesai.length > 0;
+  return `
+  <div class="center fade-in" style="padding-top:1rem">
+    <div style="font-size:3.5rem;line-height:1">🕵️🔍</div>
+    <h1 class="title-huge">${escapeHtml(CONFIG.judulAplikasi)}</h1>
+    <p class="title-md muted" style="margin-top:.25rem">${escapeHtml(CONFIG.subjudulAplikasi)}</p>
+    <div class="info-bar" style="margin-top:.75rem">${escapeHtml(CONFIG.mataPelajaran)} • ${escapeHtml(CONFIG.kelas)} • Kurikulum Merdeka</div>
+    <p style="max-width:560px;margin:1rem auto 0">Halo, Detektif! Tugasmu hari ini adalah menemukan pola yang tersembunyi dan memilih informasi yang benar-benar penting. Siap?</p>
+    <div class="stars-bar pop" style="margin-top:1rem">⭐ ${t} / 15</div>
+    <p class="muted" style="font-size:.85rem;margin-top:.25rem">Total Bintang Pola</p>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem">
+    <div class="stack">
+      ${hasProgress ? `<button class="btn btn-primary btn-lg btn-block" data-action="continue">▶️ Lanjutkan Misi</button>` : ""}
+      <button class="btn ${hasProgress ? "btn-secondary" : "btn-primary"} btn-lg btn-block" data-action="start">${hasProgress ? "🔄 Mulai dari Awal" : "🚀 MULAI MISI"}</button>
+      <div class="row">
+        <button class="btn btn-secondary" style="flex:1" data-action="open-glossarium">📖 Glosarium</button>
+        <button class="btn btn-secondary" style="flex:1" data-action="open-help">❓ Petunjuk</button>
+      </div>
+      <button class="btn btn-ghost btn-block" data-action="confirm-reset">♻️ Reset Progres</button>
+    </div>
+  </div>
+
+  <footer class="app-footer no-print">
+    <p>${escapeHtml(CONFIG.namaSekolah)} — ${escapeHtml(CONFIG.namaGuru)}</p>
+    <p>Semua jawabanmu tersimpan di perangkatmu sendiri. Tidak ada data yang dikirim ke mana pun.</p>
+  </footer>`;
+}
+
+/* ===================== VIEW: MAP ===================== */
+function isLevelUnlocked(n){
+  if (n === 1) return true;
+  return STATE.levelSelesai.includes(n-1);
+}
+function viewMap(){
+  const cards = LEVELS.map(L => {
+    const unlocked = isLevelUnlocked(L.id);
+    const done = STATE.levelSelesai.includes(L.id);
+    const b = STATE.bintang[L.id] || 0;
+    return `
+    <button class="level-card ${unlocked ? "" : "locked"}" ${unlocked ? `data-action="open-level" data-level="${L.id}"` : "disabled"} aria-label="Level ${L.id}: ${escapeHtml(L.nama)}">
+      <div class="num">${L.id}</div>
+      <div style="flex:1">
+        <div class="title-md" style="margin:0">${L.ikon} ${escapeHtml(L.nama)}</div>
+        <div class="muted" style="font-size:.9rem">${escapeHtml(L.jenis)}</div>
+        <div class="stars" style="margin-top:.35rem">${done ? bintangStr(b) : "☆☆☆"}</div>
+      </div>
+      <div style="font-size:1.5rem">${unlocked ? (done ? "✅" : "▶️") : "🔒"}</div>
+    </button>`;
+  }).join("");
+
+  const refDone = STATE.levelSelesai.includes(6);
+  const refCard = `
+    <button class="level-card" data-action="open-level" data-level="6" aria-label="Level 6: Refleksi">
+      <div class="num">6</div>
+      <div style="flex:1">
+        <div class="title-md" style="margin:0">📓 Buku Catatan Detektif</div>
+        <div class="muted" style="font-size:.9rem">Refleksi • Tidak dinilai</div>
+      </div>
+      <div style="font-size:1.5rem">${refDone ? "✅" : "✍️"}</div>
+    </button>`;
+
+  return `
+  <div class="row" style="justify-content:space-between;align-items:center">
+    <button class="btn btn-ghost" data-action="go-home">← Beranda</button>
+    <div class="stars-bar">⭐ ${totalBintang()} / 15</div>
+  </div>
+  <h2 class="title-lg" style="margin-top:1rem">🗺️ Peta Misi</h2>
+  <p class="muted">Selesaikan setiap level untuk mengumpulkan Bintang Pola. Level terbuka berurutan.</p>
+  <div class="level-grid">
+    ${cards}
+    ${refCard}
+  </div>
+  <div class="center" style="margin-top:1.5rem">
+    <button class="btn btn-primary btn-lg" data-action="show-badge">🏅 Lihat Badge Saya</button>
+  </div>`;
+}
+
+/* ===================== VIEW: LEVEL ===================== */
+function currentLevelData(){
+  return LEVELS.find(L => L.id === STATE.currentLevel);
+}
+function viewLevel(){
+  if (STATE.currentLevel === 6) return viewReflection();
+  const L = currentLevelData();
+  if (!L) return viewMap();
+
+  const header = `
+  <div class="row" style="justify-content:space-between;align-items:center">
+    <button class="btn btn-ghost" data-action="go-map">← Peta</button>
+    <div class="stars-bar">⭐ ${totalBintang()} / 15</div>
+  </div>
+  <div class="card" style="margin-top:1rem">
+    <div class="info-bar">Level ${L.id} • ${escapeHtml(L.jenis)}</div>
+    <h2 class="title-lg" style="margin:.25rem 0">${L.ikon} ${escapeHtml(L.nama)}</h2>
+    <p>${renderBi(L.narasi)}</p>
+    ${L.tabel ? tabelHtml(L.tabel) : ""}
+  </div>`;
+
+  if (L.id === 4) return header + viewLevel4(L);
+
+  const soal = L.soal[STATE.currentSoal];
+  const totalSoal = L.soal.length;
+  const progress = Math.round((STATE.currentSoal / totalSoal) * 100);
+  return header + `
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <span class="muted">Soal ${STATE.currentSoal + 1} dari ${totalSoal}</span>
+      <span class="muted">Percobaan: ${STATE.percobaan}/${CONFIG.maksPercobaan}</span>
+    </div>
+    <div class="progress-track" style="margin:.5rem 0 1rem"><div class="progress-fill" style="width:${progress}%"></div></div>
+    <p style="font-weight:700;font-size:1.1rem">${renderBi(soal.pertanyaan)}</p>
+    ${soal.tipe === "pg" ? pgHtml(soal) : multiHtml(soal)}
+    <div id="fbArea">${fbAreaHtml()}</div>
+    <div style="position:sticky;bottom:0;padding-top:1rem;background:linear-gradient(180deg,transparent,var(--card) 30%)">
+      ${aksiBawah(soal)}
+    </div>
+  </div>`;
+}
+
+function tabelHtml(t){
+  return `<div class="table-wrap" style="margin-top:.75rem">
+    <table>
+      <thead><tr>${t.headers.map(h=>`<th>${escapeHtml(h)}</th>`).join("")}</tr></thead>
+      <tbody>${t.rows.map(r=>`<tr>${r.map(c=>`<td>${escapeHtml(c)}</td>`).join("")}</tr>`).join("")}</tbody>
+    </table>
+  </div>`;
+}
+
+function pgHtml(soal){
+  const disabled = STATE.showFeedback ? "disabled" : "";
+  return `<div class="stack" style="margin-top:1rem">
+    ${soal.opsi.map((o,i)=>{
+      let cls = "option";
+      if (STATE.showFeedback){
+        if (o.benar) cls += " benar";
+        else if (STATE.selectedPG === i) cls += " salah";
+      } else if (STATE.selectedPG === i){
+        cls += " selected";
+      }
+      const letter = String.fromCharCode(65+i);
+      return `<button class="${cls}" ${disabled} data-action="pick-pg" data-idx="${i}" aria-label="Pilihan ${letter}">
+        <span class="letter">${letter}.</span>
+        <span class="lbl">${renderBi(o.text)}</span>
+        ${STATE.showFeedback && o.benar ? '<span>✅</span>' : ""}
+        ${STATE.showFeedback && !o.benar && STATE.selectedPG===i ? '<span>❌</span>' : ""}
+      </button>`;
+    }).join("")}
+  </div>`;
+}
+
+function multiHtml(soal){
+  const disabled = STATE.showFeedback ? "disabled" : "";
+  return `<div class="stack" style="margin-top:1rem">
+    ${soal.opsi.map(o=>{
+      const picked = STATE.selectedMulti.includes(o.id);
+      let cls = "option" + (picked ? " selected" : "");
+      if (STATE.showFeedback){
+        const correct = soal.jawaban.includes(o.id);
+        if (correct) cls = "option benar";
+        else if (picked) cls = "option salah";
+        else cls = "option";
+      }
+      return `<button class="${cls}" ${disabled} data-action="pick-multi" data-id="${o.id}" aria-pressed="${picked}">
+        <span class="letter">${picked ? "🔘" : "⚪"}</span>
+        <span class="lbl">${escapeHtml(o.label)}</span>
+        ${STATE.showFeedback && soal.jawaban.includes(o.id) ? '<span>✅</span>' : ""}
+        ${STATE.showFeedback && picked && !soal.jawaban.includes(o.id) ? '<span>❌</span>' : ""}
+      </button>`;
+    }).join("")}
+    <p class="muted" style="font-size:.9rem">Terpilih: ${STATE.selectedMulti.length} dari ${soal.butuh}</p>
+  </div>`;
+}
+
+function fbAreaHtml(){
+  if (!STATE.showFeedback) return "";
+  return `<div class="fb ${STATE.fbOk ? "ok" : "no"} fade-in">
+    <div style="font-size:1.4rem">${STATE.fbOk ? "✅" : "❌"}</div>
+    <div>${renderBi(STATE.fbText)}</div>
+  </div>`;
+}
+
+function aksiBawah(soal){
+  if (!STATE.showFeedback){
+    return `<button class="btn btn-primary btn-lg btn-block" data-action="check" id="btnCheck">PERIKSA JAWABAN</button>`;
+  }
+  const isLast = STATE.currentSoal >= LEVELS.find(L=>L.id===STATE.currentLevel).soal.length - 1;
+  return `<button class="btn btn-primary btn-lg btn-block pop" data-action="next">${isLast ? "LIHAT HASIL 🏁" : "LANJUT ➡️"}</button>`;
+}
+
+/* ===================== LEVEL 4: SORT ===================== */
+function viewLevel4(L){
+  const sk = L.skenario[STATE.currentSkenario];
+  const progress = Math.round((STATE.currentSkenario / L.skenario.length) * 100);
+  const poolCards = sk.kartu.map((k,i)=>{
+    const dest = STATE.sortAssign[i] || null;
+    if (dest) return "";
+    let cls = "chip";
+    if (!STATE.sortChecked && STATE.selectedChip === i) cls += " picked";
+    return `<button class="${cls}" data-action="pick-chip" data-idx="${i}" draggable="true" data-chip="${i}">${escapeHtml(k.text)}</button>`;
+  }).join("");
+
+  const basket = (key, title, emoji) => {
+    const items = sk.kartu.map((k,i)=>{
+      const dest = STATE.sortAssign[i] || null;
+      if (dest !== key) return "";
+      let cls = "chip";
+      if (STATE.sortChecked){
+        const benar = (STATE.sortFeedback[i] === true);
+        cls += benar ? " benar-tag" : " salah-tag";
+      } else if (STATE.selectedChip === i) {
+        cls += " picked";
+      }
+      const mark = STATE.sortChecked ? (STATE.sortFeedback[i] ? " ✅" : " ❌") : "";
+      return `<button class="${cls}" data-action="${STATE.sortChecked ? "" : "return-chip"}" data-idx="${i}" ${STATE.sortChecked ? "disabled" : ""} draggable="${!STATE.sortChecked}">${escapeHtml(k.text)}${mark}</button>`;
+    }).join("");
+    return `<div class="basket" data-basket="${key}">
+      <div class="basket-head"><span>${emoji} ${title}</span><span class="muted" style="font-weight:400;font-size:.85rem">${key==="penting"?"Important":"Not Important"}</span></div>
+      <div>${items || '<span class="muted" style="font-size:.85rem">Letakkan kartu di sini</span>'}</div>
+    </div>`;
+  };
+
+  const allPlaced = sk.kartu.every((_,i)=> STATE.sortAssign[i]);
+  const isLast = STATE.currentSkenario >= L.skenario.length - 1;
+
+  return `
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <span class="muted">Skenario ${STATE.currentSkenario + 1} dari ${L.skenario.length}</span>
+      <span class="muted">${STATE.sortChecked ? "Sudah diperiksa" : "Belum diperiksa"}</span>
+    </div>
+    <div class="progress-track" style="margin:.5rem 0 1rem"><div class="progress-fill" style="width:${progress}%"></div></div>
+    <div class="fb info"><div style="font-size:1.4rem">🎯</div><div><b>Tujuan:</b> ${escapeHtml(sk.tujuan)}</div></div>
+    <p class="muted" style="margin-top:.75rem;font-size:.95rem">Ketuk kartu untuk memilih, lalu ketuk keranjang tujuan. Kamu juga bisa menyeret (drag) kartunya.</p>
+    <div class="pool" data-basket="pool" style="margin-top:.75rem">
+      <div class="basket-head"><span>🗂️ Kartu Informasi</span></div>
+      ${poolCards || '<span class="muted" style="font-size:.85rem">Semua kartu sudah ditempatkan.</span>'}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr;gap:.75rem;margin-top:.75rem">
+      ${basket("penting","PENTING","🟢")}
+      ${basket("tidak","TIDAK PENTING","⚪")}
+    </div>
+    ${STATE.sortChecked ? `<div class="fb info fade-in" style="margin-top:1rem"><div style="font-size:1.4rem">💡</div><div>${renderBi(sk.penjelasan)}</div></div>` : ""}
+    <div style="position:sticky;bottom:0;padding-top:1rem;margin-top:1rem;background:linear-gradient(180deg,transparent,var(--card) 30%)">
+      ${STATE.sortChecked
+        ? `<button class="btn btn-primary btn-lg btn-block pop" data-action="next-skenario">${isLast ? "LIHAT HASIL 🏁" : "LANJUT ➡️"}</button>`
+        : `<button class="btn btn-primary btn-lg btn-block" data-action="check-sort" ${allPlaced ? "" : "disabled"}>${allPlaced ? "PERIKSA" : `Letakkan semua kartu dulu (${sk.kartu.filter((_,i)=>STATE.sortAssign[i]).length}/${sk.kartu.length})`}</button>`}
+    </div>
+  </div>`;
+}
+
+/* ===================== VIEW: RESULT ===================== */
+function viewResult(){
+  const L = currentLevelData();
+  const skor = STATE.levelSkorAkhir || 0;
+  const b = STATE.levelBintangAkhir || 0;
+  const sudahAda = STATE.levelSelesai.includes(L.id);
+  const bLama = STATE.bintang[L.id] || 0;
+  return `
+  <div class="center fade-in" style="padding-top:1rem">
+    <div class="pop" style="font-size:4rem">${b >= 3 ? "🏆" : b >= 2 ? "🎉" : b >= 1 ? "👏" : "💪"}</div>
+    <h2 class="title-lg">Level ${L.id} Selesai!</h2>
+    <p class="muted">${escapeHtml(L.nama)}</p>
+    <div class="stars-bar pop" style="margin-top:.5rem">${bintangStr(b)}</div>
+    <p style="font-size:1.5rem;font-weight:800;margin-top:.5rem">Skor: ${skor}/100</p>
+    ${sudahAda && bLama > b ? `<p class="muted">Bintang sebelumnya: ${bintangStr(bLama)} (yang tertinggi tetap dipakai)</p>` : ""}
+  </div>
+  <div class="card" style="margin-top:1.5rem">
+    <div class="stack">
+      <button class="btn btn-primary btn-lg btn-block" data-action="continue-map">🗺️ Lanjut ke Peta</button>
+      <button class="btn btn-secondary btn-block" data-action="retry-level">🔄 Ulangi Level Ini</button>
+    </div>
+  </div>
+  <footer class="app-footer no-print">
+    <p>Semua jawabanmu tersimpan di perangkatmu sendiri. Tidak ada data yang dikirim ke mana pun.</p>
+  </footer>`;
+}
+
+/* ===================== VIEW: REFLEKSI ===================== */
+function viewReflection(){
+  return `
+  <div class="row" style="justify-content:space-between;align-items:center">
+    <button class="btn btn-ghost" data-action="go-map">← Peta</button>
+    <div class="stars-bar">⭐ ${totalBintang()} / 15</div>
+  </div>
+  <div class="card" style="margin-top:1rem">
+    <div class="info-bar">Level 6 • Refleksi • Tidak Dinilai</div>
+    <h2 class="title-lg" style="margin:.25rem 0">📓 Buku Catatan Detektif</h2>
+    <p class="muted">Sebelum mengakhiri pembelajaran hari ini, coba jawab pertanyaan berikut dengan jujur. Tidak ada jawaban salah di sini.</p>
+  </div>
+  <div class="card">
+    <div class="stack">
+      ${REFLEKSI.map((q,i)=>`
+        <div>
+          <label for="refl${i}" style="font-weight:700;display:block;margin-bottom:.35rem">${i+1}. ${escapeHtml(q)}</label>
+          <textarea id="refl${i}" placeholder="Tulis jawabanmu di sini...">${escapeHtml(STATE.jawabanRefleksi["q"+i] || "")}</textarea>
+        </div>
+      `).join("")}
+    </div>
+    <div class="row" style="margin-top:1rem">
+      <button class="btn btn-primary" style="flex:1" data-action="save-refleksi">💾 SIMPAN CATATANKU</button>
+    </div>
+    <div class="row" style="margin-top:.5rem">
+      <button class="btn btn-secondary" style="flex:1" data-action="download-refleksi">⬇️ Unduh (.txt)</button>
+      ${CONFIG.tampilkanTombolCetak ? `<button class="btn btn-secondary" style="flex:1" data-action="open-print">🖨️ Cetak</button>` : ""}
+    </div>
+    <div id="refleksiStatus"></div>
+  </div>
+  <div class="card">
+    <div class="fb info">
+      <div style="font-size:1.4rem">💡</div>
+      <div>${escapeHtml(REFLEKSI_PENUTUP)}</div>
+    </div>
+    <div class="center" style="margin-top:1rem">
+      <button class="btn btn-primary btn-lg" data-action="finish-refleksi">✅ Selesai & Lihat Badge</button>
+    </div>
+  </div>
+  <footer class="app-footer no-print">
+    <p>Semua jawabanmu tersimpan di perangkatmu sendiri. Tidak ada data yang dikirim ke mana pun.</p>
+  </footer>`;
+}
+
+/* ===================== VIEW: BADGE ===================== */
+function viewBadge(){
+  const t = totalBintang();
+  const bd = getBadge(t);
+  return `
+  <div class="center fade-in" style="padding-top:1rem">
+    <div class="pop" style="font-size:5rem;line-height:1">${bd.ikon}</div>
+    <h2 class="title-huge" style="margin-top:.5rem">${escapeHtml(bd.nama)}</h2>
+    <p class="title-md muted">${escapeHtml(bd.pesan)}</p>
+    <div class="stars-bar pop" style="margin-top:1rem">⭐ ${t} / 15</div>
+  </div>
+  <div class="card" style="margin-top:1.5rem">
+    <h3 class="title-md">📊 Rincian Bintang</h3>
+    <div class="stack" style="margin-top:.5rem">
+      ${LEVELS.map(L=>{
+        const b = STATE.bintang[L.id] || 0;
+        return `<div class="row" style="justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--line)">
+          <span>Level ${L.id} — ${escapeHtml(L.nama)}</span>
+          <span>${bintangStr(b)}</span>
+        </div>`;
+      }).join("")}
+    </div>
+  </div>
+  <div class="card">
+    <div class="stack">
+      <button class="btn btn-primary btn-lg btn-block" data-action="go-map">🗺️ Kembali ke Peta</button>
+      <button class="btn btn-secondary btn-block" data-action="go-home">🏠 Ke Beranda</button>
+    </div>
+  </div>
+  <footer class="app-footer no-print">
+    <p>${escapeHtml(CONFIG.namaSekolah)} — ${escapeHtml(CONFIG.namaGuru)}</p>
+    <p>Semua jawabanmu tersimpan di perangkatmu sendiri. Tidak ada data yang dikirim ke mana pun.</p>
+  </footer>`;
+}
+
+/* ===================== FLOATING BUTTONS ===================== */
+function renderFloatBtns(){
+  const el = document.getElementById("floatBtns");
+  const showGlos = CONFIG.tampilkanGlosarium;
+  el.innerHTML = `
+    <div class="lang-toggle" role="group" aria-label="Pilih bahasa">
+      <button data-action="set-lang" data-lang="ID" class="${STATE.modeBahasa==="ID"?"active":""}" aria-label="Bahasa Indonesia">ID</button>
+      <button data-action="set-lang" data-lang="EN" class="${STATE.modeBahasa==="EN"?"active":""}" aria-label="English">EN</button>
+      <button data-action="set-lang" data-lang="DUAL" class="${STATE.modeBahasa==="DUAL"?"active":""}" aria-label="Bilingual">DUAL</button>
+    </div>
+    <button class="float-btn" data-action="toggle-text" aria-label="Mode teks besar" title="Mode Teks Besar">${STATE.teksBesar ? "🔡" : "🔠"}</button>
+    <button class="float-btn" data-action="toggle-sound" aria-label="Hidup/matikan suara">${STATE.suaraAktif ? "🔊" : "🔇"}</button>
+    ${showGlos ? `<button class="float-btn" data-action="open-glossarium" aria-label="Buka glosarium">📖</button>` : ""}
+    <button class="float-btn" data-action="open-help" aria-label="Buka petunjuk">❓</button>
+  `;
+}
+
+/* ===================== RENDER DISPATCH ===================== */
+function render(){
+  document.body.classList.toggle("teks-besar", STATE.teksBesar);
+  document.documentElement.style.setProperty("--accent", CONFIG.warnaAksen);
+  const app = document.getElementById("app");
+  let html = "";
+  if (STATE.screen === "home") html = viewHome();
+  else if (STATE.screen === "map") html = viewMap();
+  else if (STATE.screen === "level") html = viewLevel();
+  else if (STATE.screen === "result") html = viewResult();
+  else if (STATE.screen === "reflection") html = viewReflection();
+  else if (STATE.screen === "badge") html = viewBadge();
+  else html = viewHome();
+  app.innerHTML = html;
+  renderFloatBtns();
+  window.scrollTo({top:0, behavior:"instant"});
+  // Autofocus tombol periksa
+  const btn = document.getElementById("btnCheck");
+  if (btn) setTimeout(()=>btn.focus(), 80);
+}
+
+/* ===================== LOGIKA LEVEL (PG & MULTI) ===================== */
+function startLevel(n){
+  STATE.currentLevel = n;
+  if (n === 6){
+    STATE.screen = "reflection";
+    render();
+    return;
+  }
+  STATE.currentSoal = 0;
+  STATE.currentSkenario = 0;
+  STATE.selectedPG = null;
+  STATE.selectedMulti = [];
+  STATE.percobaan = 0;
+  STATE.showFeedback = false;
+  STATE.soalskor = [];
+  STATE.sortAssign = {};
+  STATE.sortChecked = false;
+  STATE.sortFeedback = {};
+  STATE.screen = "level";
+  startTimer();
+  render();
+}
+function startTimer(){
+  stopTimer();
+  if (!CONFIG.timerAktif) return;
+  STATE.timerSisa = CONFIG.durasiTimerDetik;
+}
+function stopTimer(){
+  if (STATE.timerID){ clearInterval(STATE.timerID); STATE.timerID = null; }
+}
+function pickPG(idx){
+  if (STATE.showFeedback) return;
+  STATE.selectedPG = idx;
+  playSound("klik");
+  render();
+}
+function pickMulti(id){
+  if (STATE.showFeedback) return;
+  const soal = currentLevelData().soal[STATE.currentSoal];
+  const max = soal.butuh;
+  const arr = STATE.selectedMulti.slice();
+  const pos = arr.indexOf(id);
+  if (pos >= 0) arr.splice(pos,1);
+  else {
+    if (arr.length >= max) arr.shift();
+    arr.push(id);
+  }
+  STATE.selectedMulti = arr;
+  playSound("klik");
+  render();
+}
+function checkAnswer(){
+  const L = currentLevelData();
+  const soal = L.soal[STATE.currentSoal];
+  let benar = false;
+  let fb = "";
+  if (soal.tipe === "pg"){
+    if (STATE.selectedPG === null) return;
+    const opsi = soal.opsi[STATE.selectedPG];
+    benar = !!opsi.benar;
+    fb = benar ? soal.fbBenar : soal.fbSalah;
+  } else if (soal.tipe === "multi"){
+    if (STATE.selectedMulti.length !== soal.butuh) return;
+    const jawabSet = new Set(soal.jawaban);
+    benar = STATE.selectedMulti.length === jawabSet.size && STATE.selectedMulti.every(x=>jawabSet.has(x));
+    fb = benar ? soal.fbBenar : soal.fbSalah;
+  }
+  STATE.percobaan += 1;
+  if (benar){
+    const pts = STATE.percobaan === 1 ? 1 : CONFIG.poinPercobaanKedua;
+    STATE.soalskor.push(pts);
+    STATE.showFeedback = true;
+    STATE.fbOk = true;
+    STATE.fbText = fb;
+    playSound("benar");
+  } else if (STATE.percobaan >= CONFIG.maksPercobaan){
+    STATE.soalskor.push(0);
+    STATE.showFeedback = true;
+    STATE.fbOk = false;
+    STATE.fbText = soal.fbSalah + " Jawaban yang benar akan ditampilkan pada opsi.";
+    playSound("salah");
+  } else {
+    STATE.showFeedback = true;
+    STATE.fbOk = false;
+    STATE.fbText = soal.fbSalah + " Kamu masih punya 1 percobaan lagi.";
+    playSound("salah");
+    // Kembalikan ke mode bisa memilih lagi setelah feedback dibaca
+    setTimeout(()=>{
+      STATE.showFeedback = false;
+      STATE.selectedPG = null;
+      STATE.selectedMulti = [];
+      render();
+    }, 2600);
+  }
+  render();
+}
+function nextSoal(){
+  const L = currentLevelData();
+  if (STATE.currentSoal >= L.soal.length - 1){
+    // selesai level
+    finishLevel();
+    return;
+  }
+  STATE.currentSoal += 1;
+  STATE.selectedPG = null;
+  STATE.selectedMulti = [];
+  STATE.percobaan = 0;
+  STATE.showFeedback = false;
+  render();
+}
+function finishLevel(){
+  const L = currentLevelData();
+  const total = L.soal.length;
+  const benarPoin = STATE.soalskor.reduce((a,b)=>a+b, 0);
+  const skor = Math.round((benarPoin / total) * 100);
+  const b = hitungBintang(skor);
+  STATE.levelSkorAkhir = skor;
+  STATE.levelBintangAkhir = b;
+  if (!STATE.levelSelesai.includes(L.id)) STATE.levelSelesai.push(L.id);
+  if (!STATE.bintang[L.id] || STATE.bintang[L.id] < b) STATE.bintang[L.id] = b;
+  saveProgress();
+  playSound("bintang");
+  STATE.screen = "result";
+  render();
+}
+
+/* ===================== LOGIKA LEVEL 4 (SORT) ===================== */
+function pickChip(idx){
+  if (STATE.sortChecked) return;
+  STATE.selectedChip = (STATE.selectedChip === idx) ? null : idx;
+  playSound("klik");
+  render();
+}
+function assignChip(idx, basket){
+  if (STATE.sortChecked) return;
+  if (!STATE.sortAssign) STATE.sortAssign = {};
+  STATE.sortAssign[idx] = basket;
+  STATE.selectedChip = null;
+  playSound("klik");
+  render();
+}
+function returnChip(idx){
+  if (STATE.sortChecked) return;
+  delete STATE.sortAssign[idx];
+  STATE.selectedChip = null;
+  playSound("klik");
+  render();
+}
+function checkSort(){
+  const L = currentLevelData();
+  const sk = L.skenario[STATE.currentSkenario];
+  const feedback = {};
+  let benarCount = 0;
+  sk.kartu.forEach((k,i)=>{
+    const dest = STATE.sortAssign[i];
+    const isPenting = dest === "penting";
+    const benar = (isPenting === !!k.penting);
+    feedback[i] = benar;
+    if (benar) benarCount += 1;
+  });
+  STATE.sortFeedback = feedback;
+  STATE.sortChecked = true;
+  STATE.sortSoalskor = STATE.sortSoalskor || [];
+  STATE.sortSoalskor.push({benar: benarCount, total: sk.kartu.length});
+  playSound(benarCount === sk.kartu.length ? "benar" : "salah");
+  render();
+}
+function nextSkenario(){
+  const L = currentLevelData();
+  if (STATE.currentSkenario >= L.skenario.length - 1){
+    finishLevel4();
+    return;
+  }
+  STATE.currentSkenario += 1;
+  STATE.sortAssign = {};
+  STATE.sortChecked = false;
+  STATE.sortFeedback = {};
+  render();
+}
+function finishLevel4(){
+  const L = currentLevelData();
+  const all = STATE.sortSoalskor || [];
+  let totalBenar = 0, totalKartu = 0;
+  all.forEach(x=>{ totalBenar += x.benar; totalKartu += x.total; });
+  const skor = totalKartu > 0 ? Math.round((totalBenar / totalKartu) * 100) : 0;
+  const b = hitungBintang(skor);
+  STATE.levelSkorAkhir = skor;
+  STATE.levelBintangAkhir = b;
+  if (!STATE.levelSelesai.includes(L.id)) STATE.levelSelesai.push(L.id);
+  if (!STATE.bintang[L.id] || STATE.bintang[L.id] < b) STATE.bintang[L.id] = b;
+  saveProgress();
+  playSound("bintang");
+  STATE.screen = "result";
+  render();
+}
+
+/* ===================== LOGIKA REFLEKSI ===================== */
+function saveRefleksi(){
+  const status = document.getElementById("refleksiStatus");
+  for (let i = 0; i < REFLEKSI.length; i++){
+    const t = document.getElementById("refl"+i);
+    if (t) STATE.jawabanRefleksi["q"+i] = t.value;
+  }
+  saveProgress();
+  if (status){
+    status.innerHTML = `<div class="fb ok fade-in" style="margin-top:1rem"><div style="font-size:1.4rem">✅</div><div>Catatanmu berhasil disimpan di perangkat ini.</div></div>`;
+  }
+  playSound("benar");
+}
+function downloadRefleksi(){
+  for (let i = 0; i < REFLEKSI.length; i++){
+    const t = document.getElementById("refl"+i);
+    if (t) STATE.jawabanRefleksi["q"+i] = t.value;
+  }
+  saveProgress();
+  const lines = [];
+  lines.push("CATATAN REFLEKSI — POLAQUEST");
+  lines.push("Nama Sekolah: " + CONFIG.namaSekolah);
+  lines.push("Kelas: " + CONFIG.kelas);
+  lines.push("Tanggal: " + new Date().toLocaleString("id-ID"));
+  lines.push("");
+  REFLEKSI.forEach((q,i)=>{
+    lines.push("Pertanyaan " + (i+1) + ": " + q);
+    lines.push("Jawaban: " + (STATE.jawabanRefleksi["q"+i] || "(belum diisi)"));
+    lines.push("");
+  });
+  lines.push("Total Bintang: " + totalBintang() + " / 15");
+  const blob = new Blob([lines.join("\n")], {type:"text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "catatan-polaquest.txt";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  playSound("klik");
+}
+function finishRefleksi(){
+  if (!STATE.levelSelesai.includes(6)) STATE.levelSelesai.push(6);
+  saveProgress();
+  STATE.screen = "badge";
+  render();
+}
+
+/* ===================== EVENT DELEGATION ===================== */
+document.addEventListener("click", (e)=>{
+  const target = e.target.closest("[data-action]");
+  if (!target) return;
+  const action = target.getAttribute("data-action");
+  const level = target.getAttribute("data-level");
+  const idx = target.getAttribute("data-idx");
+  const id = target.getAttribute("data-id");
+  const lang = target.getAttribute("data-lang");
+  const basket = target.getAttribute("data-basket");
+
+  // klik di luar modal menutup modal
+  if (action === "close-modal-bg" && e.target === target){ closeModal(); return; }
+
+  switch(action){
+    case "start":
+      STATE.levelSelesai = [];
+      STATE.bintang = {};
+      STATE.currentLevel = 0;
+      saveProgress();
+      STATE.screen = "map";
+      playSound("klik");
+      render();
+      break;
+    case "continue":
+      STATE.screen = "map";
+      playSound("klik");
+      render();
+      break;
+    case "go-home":
+      STATE.screen = "home";
+      render();
+      break;
+    case "go-map":
+      STATE.screen = "map";
+      render();
+      break;
+    case "open-level":
+      startLevel(parseInt(level,10));
+      break;
+    case "pick-pg":
+      pickPG(parseInt(idx,10));
+      break;
+    case "pick-multi":
+      pickMulti(id);
+      break;
+    case "check":
+      checkAnswer();
+      break;
+    case "next":
+      nextSoal();
+      break;
+    case "retry-level":
+      startLevel(STATE.currentLevel);
+      break;
+    case "continue-map":
+      STATE.screen = "map";
+      render();
+      break;
+    case "pick-chip":
+      pickChip(parseInt(idx,10));
+      break;
+    case "return-chip":
+      returnChip(parseInt(idx,10));
+      break;
+    case "check-sort":
+      checkSort();
+      break;
+    case "next-skenario":
+      nextSkenario();
+      break;
+    case "save-refleksi":
+      saveRefleksi();
+      break;
+    case "download-refleksi":
+      downloadRefleksi();
+      break;
+    case "finish-refleksi":
+      finishRefleksi();
+      break;
+    case "show-badge":
+      STATE.screen = "badge";
+      render();
+      break;
+    case "open-glossarium":
+      openGlosarium();
+      break;
+    case "open-help":
+      openHelp();
+      break;
+    case "confirm-reset":
+      confirmReset();
+      break;
+    case "do-reset":
+      closeModal();
+      resetProgress();
+      break;
+    case "close-modal":
+      closeModal();
+      break;
+    case "do-print":
+      closeModal();
+      setTimeout(()=>window.print(), 200);
+      break;
+    case "open-print":
+      openPrint();
+      break;
+    case "toggle-sound":
+      STATE.suaraAktif = !STATE.suaraAktif;
+      if (STATE.suaraAktif) playSound("klik");
+      saveProgress();
+      renderFloatBtns();
+      break;
+    case "toggle-text":
+      STATE.teksBesar = !STATE.teksBesar;
+      saveProgress();
+      render();
+      break;
+    case "set-lang":
+      STATE.modeBahasa = lang;
+      saveProgress();
+      render();
+      break;
+  }
+
+  // Klik pada keranjang level 4
+  if (basket && basket !== "pool" && STATE.selectedChip !== null && STATE.selectedChip !== undefined){
+    assignChip(STATE.selectedChip, basket);
+  }
+});
+
+/* ===================== DRAG & DROP LEVEL 4 ===================== */
+let dragIdx = null;
+document.addEventListener("dragstart", (e)=>{
+  const chip = e.target.closest("[data-chip]");
+  if (chip){
+    dragIdx = parseInt(chip.getAttribute("data-chip"),10);
+    try { e.dataTransfer.setData("text/plain", String(dragIdx)); } catch(err){}
+    e.dataTransfer.effectAllowed = "move";
+  }
+});
+document.addEventListener("dragover", (e)=>{
+  const basket = e.target.closest("[data-basket]");
+  if (basket){
+    e.preventDefault();
+    basket.classList.add("drop-active");
+  }
+});
+document.addEventListener("dragleave", (e)=>{
+  const basket = e.target.closest("[data-basket]");
+  if (basket) basket.classList.remove("drop-active");
+});
+document.addEventListener("drop", (e)=>{
+  const basket = e.target.closest("[data-basket]");
+  if (!basket) return;
+  e.preventDefault();
+  basket.classList.remove("drop-active");
+  if (dragIdx === null) return;
+  const key = basket.getAttribute("data-basket");
+  if (key === "pool"){
+    returnChip(dragIdx);
+  } else {
+    assignChip(dragIdx, key);
+  }
+  dragIdx = null;
+});
+
+/* ===================== KEYBOARD SHORTCUT ===================== */
+document.addEventListener("keydown", (e)=>{
+  if (e.key === "Escape") closeModal();
+  if (e.key === "Enter" && STATE.screen === "home"){
+    const btn = document.querySelector('[data-action="start"]');
+    if (btn && document.activeElement === document.body) btn.click();
+  }
+});
+
+/* ===================== INIT ===================== */
+function init(){
+  loadProgress();
+  document.documentElement.style.setProperty("--accent", CONFIG.warnaAksen);
+  document.body.classList.toggle("teks-besar", STATE.teksBesar);
+  render();
+}
+init();
+</script>
+</body>
+</html>
